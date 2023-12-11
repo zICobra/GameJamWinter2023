@@ -1,0 +1,93 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "InputActionValue.h"
+#include "C_FirstPersonCharacter.generated.h"
+
+UCLASS()
+class GAMEJAMWINTER2023_API AC_FirstPersonCharacter : public ACharacter
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this character's properties
+	AC_FirstPersonCharacter();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	class UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	class UDA_InputConfig* InputActions;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void CameraAnimation();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float HeadMovementIntensity = 1.5;
+
+	UPROPERTY(VisibleAnywhere)
+	class USpringArmComponent* SpringArm;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UCameraComponent* Camera;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void CallPauseMenu();
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	float MouseSensitivity = 0.75;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	float ControllerSensitivity = 0.75;
+
+private:
+
+	void Move(const FInputActionValue& Value);
+	void StartSprinting();
+	void StopSprinting();
+	void ControllerSprint();
+
+	void Look(const FInputActionValue& Value);
+	void ControllerLook(const FInputActionValue& Value);
+
+	void StartJumping();
+	void ReleaseJumping();
+
+
+
+
+	UPROPERTY(EditAnywhere, Category = "Speed")
+	float NormalWalkSpeed = 700;
+	UPROPERTY(EditAnywhere, Category = "Speed")
+	float SprintSpeed = 1500;
+	UPROPERTY(EditDefaultsOnly, Category = "MovementCapabillities")
+	bool CanSprint = true;
+	UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
+
+	AActor* HitActor;
+	bool Grabbed = false;
+
+	class UPhysicsHandleComponent* GetPhysicsHandle();
+
+	UPROPERTY(EditAnywhere, Category = "Interactable")
+	float InteractableRange = 1000;
+
+	FVector StartPoint;
+	FRotator PlayerRotation;
+	FVector EndPoint;
+
+	class AInteractableBase* PreviouslyHitActor;
+
+
+};
