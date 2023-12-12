@@ -1,30 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "A_Wand.h"
+#include "A_Broom.h"
 
 #include "InteractableBase.h"
 #include "DA_InteractableAllowed.h"
 
-
-void AA_Wand::ActivateTool()
+void AA_Broom::ActivateTool()
 {
-    GetWorld()->SpawnActor<AA_Wand>(FVector::ZeroVector, FRotator::ZeroRotator);
-			
+    GetWorld()->SpawnActor<AA_Broom>(FVector::ZeroVector, FRotator::ZeroRotator);
 }
 
-void AA_Wand::DeactivateTool()
+void AA_Broom::DeactivateTool()
 {
     Destroy();
 }
 
-void AA_Wand::InteractWithInteractable(class AInteractableBase* Interactable)
+void AA_Broom::InteractWithInteractable(class AInteractableBase* Interactable)
 {
-	Grabbed = true;
-	Interactable->StartInteract();
+	
 }
 
-bool AA_Wand::IsCompatibleWithInteractable(class AInteractableBase* Interactable)
+bool AA_Broom::IsCompatibleWithInteractable(class AInteractableBase* Interactable)
 {
     if(!ToolData)
 	{
@@ -39,5 +36,3 @@ bool AA_Wand::IsCompatibleWithInteractable(class AInteractableBase* Interactable
 	}
 	return false;
 }
-
-

@@ -13,6 +13,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "InteractableBase.h"
+#include "A_Wand.h"
 
 // Sets default values
 AC_FirstPersonCharacter::AC_FirstPersonCharacter()
@@ -268,29 +269,26 @@ void AC_FirstPersonCharacter::Interact()
 
 	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
 
-	if(bSuccess)
-	{
-		if(HitResult.GetActor())
-		{	
-			HitActor = HitResult.GetActor();
-			if(HitActor && HitActor->IsA<AInteractableBase>())
+	if(bSuccess && HitResult.GetActor())
+	{	
+		HitActor = HitResult.GetActor();
+		if(HitActor && HitActor->IsA<AInteractableBase>())
+		{
+			if(Tools[CurrentToolIndex])
 			{
-				if(CurrentTool)
+				AInteractableBase* Interactable = Cast<AInteractableBase>(HitActor);
+				if(Interactable && Tools[CurrentToolIndex]->IsCompatibleWithInteractable(Interactable))
 				{
-					AInteractableBase* Interactable = Cast<AInteractableBase>(HitActor);
-					if(Interactable)
+					Tools[CurrentToolIndex]->InteractWithInteractable(Interactable);
+					if(Tools[CurrentToolIndex]->IsA<AA_Wand>())
 					{
-						CurrentTool->InteractWithInteractable(Interactable);
+						UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+						HitResult.GetComponent()->SetSimulatePhysics(true);
+						PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, HitResult.GetActor()->GetActorRotation());
 					}
 				}
-				Grabbed = true;
-				AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
-				UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
-				HitResult.GetComponent()->SetSimulatePhysics(true);
-				InteractionBase->StartInteract();
-				PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, HitResult.GetActor()->GetActorRotation());
-				
 			}
+				
 		}
 	}
 }
@@ -309,10 +307,14 @@ class UPhysicsHandleComponent* AC_FirstPersonCharacter::GetPhysicsHandle()
 
 void AC_FirstPersonCharacter::SwitchToNextTool()
 {
-	UE_LOG(LogTemp, Warning, TEXT("NextTool"));
+	Tools[CurrentToolIndex]->DeactivateTool();
+	CurrentToolIndex = (CurrentToolIndex + 1) % Tools.Num();
+	Tools[CurrentToolIndex]->ActivateTool();
 }
 
 void AC_FirstPersonCharacter::SwitchToPreviousTool()
 {
-	UE_LOG(LogTemp, Warning, TEXT("PreviousTool"));
+	Tools[CurrentToolIndex]->DeactivateTool();
+	CurrentToolIndex = (CurrentToolIndex - 1 + Tools.Num()) % Tools.Num();
+	Tools[CurrentToolIndex]->ActivateTool();
 }

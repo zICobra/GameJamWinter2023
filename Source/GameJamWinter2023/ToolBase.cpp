@@ -26,10 +26,6 @@ void AToolBase::DeactivateTool()
 
 void AToolBase::InteractWithInteractable(AInteractableBase* Interactable)
 {
-	if (IsCompatibleWithInteractable(Interactable))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("InteractWithInteractable"));
-	}
 	
 }
 
@@ -43,11 +39,9 @@ bool AToolBase::IsCompatibleWithInteractable(AInteractableBase* Interactable)
 	{
 		if(Interactable->IsA(AllowedInteractableType))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AllowedInteractable"));
 			return true;
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("WrongInteractable"));
 	return false;
 	
 }

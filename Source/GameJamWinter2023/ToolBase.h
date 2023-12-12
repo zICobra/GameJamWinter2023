@@ -20,6 +20,7 @@ public:
 	virtual void InteractWithInteractable(class AInteractableBase* Interactable);
 	virtual bool IsCompatibleWithInteractable(class AInteractableBase* Interactable);
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
