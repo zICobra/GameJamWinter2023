@@ -4,6 +4,7 @@
 #include "ToolBase.h"
 
 #include "InteractableBase.h"
+#include "DA_InteractableAllowed.h"
 
 // Sets default values
 AToolBase::AToolBase()
@@ -23,9 +24,32 @@ void AToolBase::DeactivateTool()
 	UE_LOG(LogTemp, Warning, TEXT("Deactivate"));
 }
 
-void AToolBase::InteractWithInteractable(AInteractableBase Interactable)
+void AToolBase::InteractWithInteractable(AInteractableBase* Interactable)
 {
-	UE_LOG(LogTemp, Warning, TEXT("InteractWithInteractable"));
+	if (IsCompatibleWithInteractable(Interactable))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InteractWithInteractable"));
+	}
+	
+}
+
+bool AToolBase::IsCompatibleWithInteractable(AInteractableBase* Interactable)
+{
+	if(!ToolData)
+	{
+		return false;
+	}
+	for (const auto& AllowedInteractableType : ToolData->AllowedInteractables)
+	{
+		if(Interactable->IsA(AllowedInteractableType))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AllowedInteractable"));
+			return true;
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("WrongInteractable"));
+	return false;
+	
 }
 
 // Called when the game starts or when spawned

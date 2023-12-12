@@ -21,10 +21,18 @@ AC_FirstPersonCharacter::AC_FirstPersonCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->SetupAttachment(RootComponent);
-
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	WandSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("WandSpawn"));
+	BroomSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("BroomSpawn"));
+	TrashcanSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("TrashcanSpawn"));
+
+	SpringArm->SetupAttachment(RootComponent);
 	Camera->SetupAttachment(SpringArm);
+	WandSpawn->SetupAttachment(RootComponent);
+	BroomSpawn->SetupAttachment(RootComponent);
+	TrashcanSpawn->SetupAttachment(RootComponent);
+
+
 
 }
 
@@ -38,6 +46,19 @@ void AC_FirstPersonCharacter::BeginPlay()
 		CharacterMovement->MaxWalkSpeed = NormalWalkSpeed;
 	}
 	CameraAnimation();
+
+	ToolAttachmentPoints.Add(WandSpawn);
+	ToolAttachmentPoints.Add(BroomSpawn);
+	ToolAttachmentPoints.Add(TrashcanSpawn);
+
+	for (TSubclassOf<AToolBase>& ToolClass : ToolClasses)
+    {
+        AToolBase* Tool = GetWorld()->SpawnActor<AToolBase>(ToolClass, FVector::ZeroVector, FRotator::ZeroRotator);
+        Tools.Add(Tool);
+    }
+
+    Tools[CurrentToolIndex]->ActivateTool();
+	Tools[CurrentToolIndex]->AttachToComponent(ToolAttachmentPoints[CurrentToolIndex], FAttachmentTransformRules::SnapToTargetIncludingScale);
 }
 
 // Called every frame
@@ -104,6 +125,8 @@ void AC_FirstPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 	PEI->BindAction(InputActions->InputControllerLook, ETriggerEvent::Triggered, this, &AC_FirstPersonCharacter::ControllerLook);
 	PEI->BindAction(InputActions->InputPauseMenu, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::CallPauseMenu);
 	PEI->BindAction(InputActions->InputInteract, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::Interact);
+	PEI->BindAction(InputActions->InputNextTool, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::SwitchToNextTool);
+	PEI->BindAction(InputActions->InputPreviousTool, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::SwitchToPreviousTool);
 	if(CanSprint)
 	{
 		PEI->BindAction(InputActions->InputKeyboardSprint, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::StartSprinting);
@@ -114,6 +137,8 @@ void AC_FirstPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 	PEI->BindAction(InputActions->InputJump, ETriggerEvent::Completed, this, &AC_FirstPersonCharacter::ReleaseJumping);
 	
 }	
+
+
 
 void AC_FirstPersonCharacter::Move(const FInputActionValue& Value)
 {
@@ -229,9 +254,10 @@ void AC_FirstPersonCharacter::Interact()
 		return;
 		
 	}
-
+	
 	Controller->GetPlayerViewPoint(StartPoint, PlayerRotation);
 	EndPoint = StartPoint + PlayerRotation.Vector() * InteractableRange;
+	TargetPoint = StartPoint + PlayerRotation.Vector() * GrabDistance;
 
 	FHitResult HitResult;
 
@@ -249,6 +275,14 @@ void AC_FirstPersonCharacter::Interact()
 			HitActor = HitResult.GetActor();
 			if(HitActor && HitActor->IsA<AInteractableBase>())
 			{
+				if(CurrentTool)
+				{
+					AInteractableBase* Interactable = Cast<AInteractableBase>(HitActor);
+					if(Interactable)
+					{
+						CurrentTool->InteractWithInteractable(Interactable);
+					}
+				}
 				Grabbed = true;
 				AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
 				UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
@@ -273,3 +307,12 @@ class UPhysicsHandleComponent* AC_FirstPersonCharacter::GetPhysicsHandle()
 }
 
 
+void AC_FirstPersonCharacter::SwitchToNextTool()
+{
+	UE_LOG(LogTemp, Warning, TEXT("NextTool"));
+}
+
+void AC_FirstPersonCharacter::SwitchToPreviousTool()
+{
+	UE_LOG(LogTemp, Warning, TEXT("PreviousTool"));
+}

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "ToolBase.h"
 #include "C_FirstPersonCharacter.generated.h"
 
 UCLASS()
@@ -35,9 +36,17 @@ protected:
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UCameraComponent* Camera;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* WandSpawn;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* BroomSpawn;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* TrashcanSpawn;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void CallPauseMenu();
+
+	class AToolBase* CurrentTool;
 
 public:	
 	// Called every frame
@@ -51,6 +60,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
 	float ControllerSensitivity = 0.75;
 
+	void SwitchToNextTool();
+	void SwitchToPreviousTool(); 
 private:
 
 	void Move(const FInputActionValue& Value);
@@ -84,12 +95,23 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Interactable")
 	float InteractableRange = 1000;
+	UPROPERTY(EditAnywhere, Category = "Interactable")
+	float GrabDistance = 200;
 
 	FVector StartPoint;
 	FRotator PlayerRotation;
 	FVector EndPoint;
+	FVector TargetPoint;
 
 	class AInteractableBase* PreviouslyHitActor;
+
+	UPROPERTY(EditAnywhere, Category = "Tools")
+	TArray<TSubclassOf<AToolBase>> ToolClasses;
+	
+	TArray<USceneComponent*> ToolAttachmentPoints;
+
+	TArray<AToolBase*> Tools;
+	int32 CurrentToolIndex;
 
 
 };

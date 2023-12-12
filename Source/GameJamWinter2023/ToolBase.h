@@ -17,8 +17,8 @@ public:
 
 	virtual void ActivateTool();
 	virtual void DeactivateTool();
-	virtual void InteractWithInteractable(class AInteractableBase Interactable);
-	// virtual bool IsCompatibleWithInteractable(class AInteractableBase* Interactable);
+	virtual void InteractWithInteractable(class AInteractableBase* Interactable);
+	virtual bool IsCompatibleWithInteractable(class AInteractableBase* Interactable);
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,7 +28,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, Category = "Tool")
 	class UDA_InteractableAllowed* ToolData;
 
 };

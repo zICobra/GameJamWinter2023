@@ -29,6 +29,10 @@ public:
 	UInputAction* InputPauseMenu;
 	UPROPERTY(EditdefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputInteract;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputAction* InputNextTool;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputAction* InputPreviousTool;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputKeyboardSprint;
@@ -36,4 +40,5 @@ public:
 	UInputAction* InputControllerSprint;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputJump;
+
 };
