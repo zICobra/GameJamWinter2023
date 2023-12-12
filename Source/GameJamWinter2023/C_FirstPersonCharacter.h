@@ -64,6 +64,8 @@ private:
 	void StartJumping();
 	void ReleaseJumping();
 
+	void Interact();
+
 
 
 

@@ -27,6 +27,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputPauseMenu;
+	UPROPERTY(EditdefaultsOnly, BlueprintReadOnly)
+	UInputAction* InputInteract;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputKeyboardSprint;

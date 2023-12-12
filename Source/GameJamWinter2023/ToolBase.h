@@ -4,24 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "InteractableBase.generated.h"
+#include "ToolBase.generated.h"
 
 UCLASS()
-class GAMEJAMWINTER2023_API AInteractableBase : public AActor
+class GAMEJAMWINTER2023_API AToolBase : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AInteractableBase();
+	AToolBase();
 
-	void Outline(USceneComponent* Component);
-	void ClearOutline(USceneComponent* Component);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void StartInteract();
-	UFUNCTION(BlueprintImplementableEvent)
-	void StopInteract();
+	virtual void ActivateTool();
+	virtual void DeactivateTool();
+	virtual void InteractWithInteractable(class AInteractableBase Interactable);
+	// virtual bool IsCompatibleWithInteractable(class AInteractableBase* Interactable);
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,4 +28,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, Category = "Tool")
+	class UDA_InteractableAllowed* ToolData;
+
 };
+
+

@@ -103,6 +103,7 @@ void AC_FirstPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 	PEI->BindAction(InputActions->InputLook, ETriggerEvent::Triggered, this, &AC_FirstPersonCharacter::Look);
 	PEI->BindAction(InputActions->InputControllerLook, ETriggerEvent::Triggered, this, &AC_FirstPersonCharacter::ControllerLook);
 	PEI->BindAction(InputActions->InputPauseMenu, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::CallPauseMenu);
+	PEI->BindAction(InputActions->InputInteract, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::Interact);
 	if(CanSprint)
 	{
 		PEI->BindAction(InputActions->InputKeyboardSprint, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::StartSprinting);
@@ -116,7 +117,6 @@ void AC_FirstPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 
 void AC_FirstPersonCharacter::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Walking"));
 	if(Controller)
 	{
 		const FVector2D MoveValue = Value.Get<FVector2D>();
@@ -216,6 +216,51 @@ void AC_FirstPersonCharacter::ReleaseJumping()
 {
 	StopJumping();
 }
+
+void AC_FirstPersonCharacter::Interact()
+{
+	if(Grabbed == true)
+	{
+		Grabbed = false;
+		AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
+		UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+		PhysicsHandle->ReleaseComponent();
+		InteractionBase->StopInteract();
+		return;
+		
+	}
+
+	Controller->GetPlayerViewPoint(StartPoint, PlayerRotation);
+	EndPoint = StartPoint + PlayerRotation.Vector() * InteractableRange;
+
+	FHitResult HitResult;
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetOwner());
+
+
+	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
+
+	if(bSuccess)
+	{
+		if(HitResult.GetActor())
+		{	
+			HitActor = HitResult.GetActor();
+			if(HitActor && HitActor->IsA<AInteractableBase>())
+			{
+				Grabbed = true;
+				AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
+				UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+				HitResult.GetComponent()->SetSimulatePhysics(true);
+				InteractionBase->StartInteract();
+				PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, HitResult.GetActor()->GetActorRotation());
+				
+			}
+		}
+	}
+}
+
 
 class UPhysicsHandleComponent* AC_FirstPersonCharacter::GetPhysicsHandle()
 {
