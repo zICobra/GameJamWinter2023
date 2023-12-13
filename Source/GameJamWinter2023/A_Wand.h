@@ -23,6 +23,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Tools")
 	class UDA_InteractableAllowed* ToolData;
+	UPROPERTY(EditAnywhere, Category = "Tools")
+	UBlueprint* WandBlueprint;
 
-	bool Grabbed = false;
+
 };

@@ -282,6 +282,7 @@ void AC_FirstPersonCharacter::Interact()
 					Tools[CurrentToolIndex]->InteractWithInteractable(Interactable);
 					if(Tools[CurrentToolIndex]->IsA<AA_Wand>())
 					{
+						Grabbed = true;
 						UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 						HitResult.GetComponent()->SetSimulatePhysics(true);
 						PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, HitResult.GetActor()->GetActorRotation());
@@ -306,10 +307,11 @@ class UPhysicsHandleComponent* AC_FirstPersonCharacter::GetPhysicsHandle()
 
 
 void AC_FirstPersonCharacter::SwitchToNextTool()
-{
+{	
 	Tools[CurrentToolIndex]->DeactivateTool();
 	CurrentToolIndex = (CurrentToolIndex + 1) % Tools.Num();
 	Tools[CurrentToolIndex]->ActivateTool();
+	Tools[CurrentToolIndex]->AttachToComponent(ToolAttachmentPoints[CurrentToolIndex], FAttachmentTransformRules::SnapToTargetIncludingScale);
 }
 
 void AC_FirstPersonCharacter::SwitchToPreviousTool()
@@ -317,4 +319,5 @@ void AC_FirstPersonCharacter::SwitchToPreviousTool()
 	Tools[CurrentToolIndex]->DeactivateTool();
 	CurrentToolIndex = (CurrentToolIndex - 1 + Tools.Num()) % Tools.Num();
 	Tools[CurrentToolIndex]->ActivateTool();
+	Tools[CurrentToolIndex]->AttachToComponent(ToolAttachmentPoints[CurrentToolIndex], FAttachmentTransformRules::SnapToTargetIncludingScale);
 }

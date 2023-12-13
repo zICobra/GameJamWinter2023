@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "ToolBase.h"
-#include "A_Broom.generated.h"
+#include "A_Trashcan.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GAMEJAMWINTER2023_API AA_Broom : public AToolBase
+class GAMEJAMWINTER2023_API AA_Trashcan : public AToolBase
 {
 	GENERATED_BODY()
 
@@ -20,9 +20,10 @@ public:
 	virtual void InteractWithInteractable(class AInteractableBase* Interactable);
 	virtual bool IsCompatibleWithInteractable(class AInteractableBase* Interactable) override;
 
+
 	UPROPERTY(EditDefaultsOnly, Category = "Tools")
 	class UDA_InteractableAllowed* ToolData;
 	UPROPERTY(EditAnywhere, Category = "Tools")
-	UBlueprint* BroomBlueprint;
+	UBlueprint* TrashcanBlueprint;
 	
 };

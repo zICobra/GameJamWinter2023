@@ -16,12 +16,12 @@ AToolBase::AToolBase()
 
 void AToolBase::ActivateTool()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Activate"));
+	
 }
 
 void AToolBase::DeactivateTool()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Deactivate"));
+	
 }
 
 void AToolBase::InteractWithInteractable(AInteractableBase* Interactable)

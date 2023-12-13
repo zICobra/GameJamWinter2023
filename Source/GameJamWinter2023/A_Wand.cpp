@@ -9,18 +9,20 @@
 
 void AA_Wand::ActivateTool()
 {
-    GetWorld()->SpawnActor<AA_Wand>(FVector::ZeroVector, FRotator::ZeroRotator);
+    if(WandBlueprint)
+	{
+    	GetWorld()->SpawnActor<AActor>(WandBlueprint->GeneratedClass, FVector::ZeroVector, FRotator::ZeroRotator);
+	}
 			
 }
 
 void AA_Wand::DeactivateTool()
 {
-    Destroy();
+	DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 }
 
 void AA_Wand::InteractWithInteractable(class AInteractableBase* Interactable)
 {
-	Grabbed = true;
 	Interactable->StartInteract();
 }
 

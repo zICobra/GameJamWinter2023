@@ -8,17 +8,20 @@
 
 void AA_Broom::ActivateTool()
 {
-    GetWorld()->SpawnActor<AA_Broom>(FVector::ZeroVector, FRotator::ZeroRotator);
+	if(BroomBlueprint)
+	{
+    	GetWorld()->SpawnActor<AActor>(BroomBlueprint->GeneratedClass, FVector::ZeroVector, FRotator::ZeroRotator);
+	}
 }
 
 void AA_Broom::DeactivateTool()
 {
-    Destroy();
+	DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 }
 
 void AA_Broom::InteractWithInteractable(class AInteractableBase* Interactable)
 {
-	
+	Interactable->Destroy();
 }
 
 bool AA_Broom::IsCompatibleWithInteractable(class AInteractableBase* Interactable)
