@@ -272,6 +272,7 @@ void AC_FirstPersonCharacter::Interact()
 
 
 	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
+	// DrawDebugLine()
 
 	if(bSuccess && HitResult.GetActor())
 	{	
