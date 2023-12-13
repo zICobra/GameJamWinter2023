@@ -40,5 +40,7 @@ public:
 	UInputAction* InputControllerSprint;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputJump;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputAction* InputEagleVision;
 
 };

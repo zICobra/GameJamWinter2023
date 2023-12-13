@@ -14,6 +14,7 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "InteractableBase.h"
 #include "A_Wand.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AC_FirstPersonCharacter::AC_FirstPersonCharacter()
@@ -60,6 +61,7 @@ void AC_FirstPersonCharacter::BeginPlay()
 
     Tools[CurrentToolIndex]->ActivateTool();
 	Tools[CurrentToolIndex]->AttachToComponent(ToolAttachmentPoints[CurrentToolIndex], FAttachmentTransformRules::SnapToTargetIncludingScale);
+	SwitchTool(CurrentToolIndex);
 }
 
 // Called every frame
@@ -128,6 +130,8 @@ void AC_FirstPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 	PEI->BindAction(InputActions->InputInteract, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::Interact);
 	PEI->BindAction(InputActions->InputNextTool, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::SwitchToNextTool);
 	PEI->BindAction(InputActions->InputPreviousTool, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::SwitchToPreviousTool);
+	PEI->BindAction(InputActions->InputEagleVision, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::TurnEagleVisionOn);
+
 	if(CanSprint)
 	{
 		PEI->BindAction(InputActions->InputKeyboardSprint, ETriggerEvent::Started, this, &AC_FirstPersonCharacter::StartSprinting);
@@ -294,6 +298,39 @@ void AC_FirstPersonCharacter::Interact()
 	}
 }
 
+void AC_FirstPersonCharacter::Footsteps()
+{
+	Controller->GetPlayerViewPoint(StartPoint, PlayerRotation);
+	EndPoint = StartPoint - FVector(0, 0, 200);
+	TargetPoint = StartPoint + PlayerRotation.Vector() * GrabDistance;
+
+	FHitResult HitResult;
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetOwner());
+
+
+	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
+
+	UE_LOG(LogTemp, Warning, TEXT("Step"));
+	if(bSuccess && HitResult.GetActor())
+	{
+		if(HitResult.GetActor()->ActorHasTag("Keller"))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Keller"));
+		}
+		if(HitResult.GetActor()->ActorHasTag("Holzboden"))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Holzboden"));
+		}
+		if(HitResult.GetActor()->ActorHasTag("Dachboden"))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Dachboden"));
+		}
+	}
+}
+
 
 class UPhysicsHandleComponent* AC_FirstPersonCharacter::GetPhysicsHandle()
 {
@@ -312,6 +349,7 @@ void AC_FirstPersonCharacter::SwitchToNextTool()
 	CurrentToolIndex = (CurrentToolIndex + 1) % Tools.Num();
 	Tools[CurrentToolIndex]->ActivateTool();
 	Tools[CurrentToolIndex]->AttachToComponent(ToolAttachmentPoints[CurrentToolIndex], FAttachmentTransformRules::SnapToTargetIncludingScale);
+	SwitchTool(CurrentToolIndex);
 }
 
 void AC_FirstPersonCharacter::SwitchToPreviousTool()
@@ -320,4 +358,5 @@ void AC_FirstPersonCharacter::SwitchToPreviousTool()
 	CurrentToolIndex = (CurrentToolIndex - 1 + Tools.Num()) % Tools.Num();
 	Tools[CurrentToolIndex]->ActivateTool();
 	Tools[CurrentToolIndex]->AttachToComponent(ToolAttachmentPoints[CurrentToolIndex], FAttachmentTransformRules::SnapToTargetIncludingScale);
+	SwitchTool(CurrentToolIndex);
 }

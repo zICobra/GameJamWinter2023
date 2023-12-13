@@ -45,6 +45,12 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void CallPauseMenu();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SwitchTool(int32 ToolIndex);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void TurnEagleVisionOn();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void TurnEagleVisionOff();
 
 	class AToolBase* CurrentTool;
 
@@ -76,6 +82,16 @@ private:
 	void ReleaseJumping();
 
 	void Interact();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	class USoundCue* KellerFootsteps;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	class USoundCue* HolzbodenFootsteps;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	class USoundCue* DachbodenFootsteps;
+
+	UFUNCTION(BlueprintCallable)
+	void Footsteps();
 
 
 

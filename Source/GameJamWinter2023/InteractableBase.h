@@ -25,12 +25,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SpawnInteractables();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void SetSpawnLocations();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnPoints")
 	TArray<class ATargetPoint*> SpawnLocations;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "SpawnPoints")
 	UBlueprint* InteractableBlueprint;
 
 protected:
