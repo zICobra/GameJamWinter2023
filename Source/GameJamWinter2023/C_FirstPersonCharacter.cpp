@@ -79,17 +79,21 @@ void AC_FirstPersonCharacter::Tick(float DeltaTime)
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 	Params.AddIgnoredActor(GetOwner());
+	if(GrabbedActor)
+	{
+		Params.AddIgnoredActor(GrabbedActor);
+	}
 
 	if(Grabbed)
 	{
 		FVector TargetLocation = Camera->GetComponentLocation() + Camera->GetForwardVector() * 200;
 		UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 		PhysicsHandle->SetTargetLocation(TargetLocation);
-		return;
 	}
 
 	if(IsEagleVisionOn)
 	{
+		PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
 		return;
 	}
 
@@ -267,23 +271,33 @@ void AC_FirstPersonCharacter::Interact()
 	Params.AddIgnoredActor(GetOwner());
 
 
+	if(Grabbed == true)
+	{	
+		Params.AddIgnoredActor(GrabbedActor);
+		bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
+		if(bSuccess && HitResult.GetActor())
+		{
+			if (bSuccess && HitResult.GetActor()->IsA<AInteractableBase>())
+     		{
+				UE_LOG(LogTemp, Warning, TEXT("Hit"));
+            	AInteractableBase* ActorHit = Cast<AInteractableBase>(HitResult.GetActor());
+
+				ActorHit->Outline(HitResult.GetActor()->FindComponentByClass<UStaticMeshComponent>());
+        	}
+		}
+		Grabbed = false;
+		AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
+		UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+		PhysicsHandle->ReleaseComponent();
+		InteractionBase->StopInteract();
+		HitActor->SetActorEnableCollision(true);
+		GrabbedActor = nullptr;
+		return;
+	}
+
 	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
-
-	
-
 	if(bSuccess && HitResult.GetActor())
 	{	
-		if(Grabbed == true)
-		{
-			Grabbed = false;
-			AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
-			UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
-			PhysicsHandle->ReleaseComponent();
-			InteractionBase->StopInteract();
-			HitActor->SetActorEnableCollision(true);
-			return;
-			
-		}
 		
 		HitActor = HitResult.GetActor();
 		if(HitActor && HitActor->IsA<AInteractableBase>())
@@ -297,10 +311,12 @@ void AC_FirstPersonCharacter::Interact()
 					if(Tools[CurrentToolIndex]->IsA<AA_Wand>())
 					{
 						Grabbed = true;
+						GrabbedActor = HitActor;
 						UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 						HitResult.GetComponent()->SetSimulatePhysics(true);
 						PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, HitResult.GetActor()->GetActorRotation());
 						HitActor->SetActorEnableCollision(false);
+						PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
 					}
 				}
 			}

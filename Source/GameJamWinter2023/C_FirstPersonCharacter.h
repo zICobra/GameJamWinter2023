@@ -109,6 +109,7 @@ private:
 
 	AActor* HitActor;
 	bool Grabbed = false;
+	AActor* GrabbedActor;
 
 	class UPhysicsHandleComponent* GetPhysicsHandle();
 
