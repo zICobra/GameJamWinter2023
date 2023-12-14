@@ -54,6 +54,9 @@ protected:
 
 	class AToolBase* CurrentTool;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool IsEagleVisionOn = false;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

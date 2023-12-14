@@ -14,7 +14,8 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "InteractableBase.h"
 #include "A_Wand.h"
-#include "DrawDebugHelpers.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AC_FirstPersonCharacter::AC_FirstPersonCharacter()
@@ -69,6 +70,7 @@ void AC_FirstPersonCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
 	Controller->GetPlayerViewPoint(StartPoint, PlayerRotation);
 	EndPoint = StartPoint + PlayerRotation.Vector() * InteractableRange;
 
@@ -80,12 +82,16 @@ void AC_FirstPersonCharacter::Tick(float DeltaTime)
 
 	if(Grabbed)
 	{
-		FVector TargetLocation = Camera->GetComponentLocation() + Camera->GetForwardVector() * 500;
+		FVector TargetLocation = Camera->GetComponentLocation() + Camera->GetForwardVector() * 200;
 		UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 		PhysicsHandle->SetTargetLocation(TargetLocation);
 		return;
 	}
 
+	if(IsEagleVisionOn)
+	{
+		return;
+	}
 
 	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
 
@@ -96,7 +102,7 @@ void AC_FirstPersonCharacter::Tick(float DeltaTime)
             PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
         }
 
-        if (bSuccess && HitResult.GetActor())
+        if (bSuccess && HitResult.GetActor()->IsA<AInteractableBase>())
         {
             PreviouslyHitActor = Cast<AInteractableBase>(HitResult.GetActor());
 
@@ -249,17 +255,7 @@ void AC_FirstPersonCharacter::ReleaseJumping()
 
 void AC_FirstPersonCharacter::Interact()
 {
-	if(Grabbed == true)
-	{
-		Grabbed = false;
-		AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
-		UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
-		PhysicsHandle->ReleaseComponent();
-		InteractionBase->StopInteract();
-		return;
-		
-	}
-	
+
 	Controller->GetPlayerViewPoint(StartPoint, PlayerRotation);
 	EndPoint = StartPoint + PlayerRotation.Vector() * InteractableRange;
 	TargetPoint = StartPoint + PlayerRotation.Vector() * GrabDistance;
@@ -272,10 +268,23 @@ void AC_FirstPersonCharacter::Interact()
 
 
 	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
-	// DrawDebugLine()
+
+	
 
 	if(bSuccess && HitResult.GetActor())
 	{	
+		if(Grabbed == true)
+		{
+			Grabbed = false;
+			AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
+			UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+			PhysicsHandle->ReleaseComponent();
+			InteractionBase->StopInteract();
+			HitActor->SetActorEnableCollision(true);
+			return;
+			
+		}
+		
 		HitActor = HitResult.GetActor();
 		if(HitActor && HitActor->IsA<AInteractableBase>())
 		{
@@ -291,6 +300,7 @@ void AC_FirstPersonCharacter::Interact()
 						UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 						HitResult.GetComponent()->SetSimulatePhysics(true);
 						PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, HitResult.GetActor()->GetActorRotation());
+						HitActor->SetActorEnableCollision(false);
 					}
 				}
 			}
@@ -312,22 +322,21 @@ void AC_FirstPersonCharacter::Footsteps()
 	Params.AddIgnoredActor(GetOwner());
 
 
-	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
+	bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_Visibility, Params);
 
-	UE_LOG(LogTemp, Warning, TEXT("Step"));
-	if(bSuccess && HitResult.GetActor())
+	if(bSuccess&& HitResult.GetActor())
 	{
 		if(HitResult.GetActor()->ActorHasTag("Keller"))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Keller"));
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), KellerFootsteps, GetActorLocation(), KellerFootsteps->GetVolumeMultiplier(), KellerFootsteps->GetPitchMultiplier());
 		}
 		if(HitResult.GetActor()->ActorHasTag("Holzboden"))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Holzboden"));
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), HolzbodenFootsteps, GetActorLocation(), HolzbodenFootsteps->GetVolumeMultiplier(), HolzbodenFootsteps->GetPitchMultiplier());
 		}
 		if(HitResult.GetActor()->ActorHasTag("Dachboden"))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Dachboden"));
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), DachbodenFootsteps, GetActorLocation(), DachbodenFootsteps->GetVolumeMultiplier(), DachbodenFootsteps->GetPitchMultiplier());
 		}
 	}
 }
