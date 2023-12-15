@@ -86,14 +86,17 @@ void AC_FirstPersonCharacter::Tick(float DeltaTime)
 
 	if(Grabbed)
 	{
-		FVector TargetLocation = Camera->GetComponentLocation() + Camera->GetForwardVector() * 200;
+		FVector TargetLocation = Camera->GetComponentLocation() + Camera->GetForwardVector() * 150;
 		UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 		PhysicsHandle->SetTargetLocation(TargetLocation);
 	}
 
 	if(IsEagleVisionOn)
 	{
-		PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
+		if(PreviouslyHitActor)
+		{
+			PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
+		}
 		return;
 	}
 
@@ -316,7 +319,10 @@ void AC_FirstPersonCharacter::Interact()
 						HitResult.GetComponent()->SetSimulatePhysics(true);
 						PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, HitResult.GetActor()->GetActorRotation());
 						HitActor->SetActorEnableCollision(false);
-						PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
+						if(PreviouslyHitActor)
+						{
+							PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
+						}
 					}
 				}
 			}

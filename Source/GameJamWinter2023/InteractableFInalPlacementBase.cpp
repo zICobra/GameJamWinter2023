@@ -3,13 +3,21 @@
 
 #include "InteractableFInalPlacementBase.h"
 
-#include"InteractableBase.h"
+#include "InteractableBase.h"
+#include "DA_PlacementInfo.h"
 
 void AInteractableFInalPlacementBase::Interacted(AInteractableBase* Interactable)
 {
     if(IsHoldingCorrectInteractable(Interactable))
     {
-        UE_LOG(LogTemp, Warning, TEXT("Interacted"));
+        for (UDA_PlacementInfo* PlacementInfo : InteractablePlacementInfoArray)
+        {
+        if (PlacementInfo->InteractableClass == GetClass())
+            {
+                 PlacementInfo->AssociatedStaticMesh->SetVisibility(true);
+                 break;
+            }
+        }
     }
 }
 

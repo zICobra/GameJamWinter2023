@@ -16,6 +16,22 @@
 		"directory": "E:\\UnrealProjects\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\Source\\GameJamWinter2023\\A_Deathzone.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\.vscode\\compileCommands_GameJamWinter2023\\GameJamWinter2023.264.rsp"
+		],
+		"directory": "E:\\UnrealProjects\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\Source\\GameJamWinter2023\\A_Deathzone.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\.vscode\\compileCommands_GameJamWinter2023\\GameJamWinter2023.264.rsp"
+		],
+		"directory": "E:\\UnrealProjects\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\Source\\GameJamWinter2023\\A_Trashcan.cpp",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\Hostx64\\x64\\cl.exe",
@@ -89,6 +105,22 @@
 	},
 	{
 		"file": "E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\Source\\GameJamWinter2023\\DA_InteractableAllowed.h",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\.vscode\\compileCommands_GameJamWinter2023\\GameJamWinter2023.264.rsp"
+		],
+		"directory": "E:\\UnrealProjects\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\Source\\GameJamWinter2023\\DA_PlacementInfo.cpp",
+		"arguments": [
+			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\.vscode\\compileCommands_GameJamWinter2023\\GameJamWinter2023.264.rsp"
+		],
+		"directory": "E:\\UnrealProjects\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\Source\\GameJamWinter2023\\DA_PlacementInfo.h",
 		"arguments": [
 			"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\Hostx64\\x64\\cl.exe",
 			"@E:\\UnrealProjects\\GameJamWinter2023\\GameJamWinter2023\\.vscode\\compileCommands_GameJamWinter2023\\GameJamWinter2023.264.rsp"

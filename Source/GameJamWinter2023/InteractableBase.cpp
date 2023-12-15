@@ -16,22 +16,28 @@ AInteractableBase::AInteractableBase()
 
 void AInteractableBase::SpawnInteractables()
 {
-    if(SpawnLocations.IsEmpty())
+    if(SpawnLocations.Num() == 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpawnPointArrayIsEmpty"));
+        SpawnLocation = GetActorLocation();
         return;
     }
     int32 RandomIndex = FMath::RandRange(0, SpawnLocations.Num() - 1);
 
-    ATargetPoint* RandomLocation = SpawnLocations[RandomIndex];
+    RandomLocation = SpawnLocations[RandomIndex];
 
-    SpawnLocations.RemoveAt(RandomIndex);
+    SpawnLocation = RandomLocation->GetActorLocation();
 
     if(InteractableBlueprint)
     {
         GetWorld()->SpawnActor<AActor>(InteractableBlueprint->GeneratedClass, RandomLocation->GetActorLocation(), RandomLocation->GetActorRotation());
     }
 
+}
+
+void AInteractableBase::RespawnActor()
+{
+    UE_LOG(LogTemp, Warning, TEXT("SpawnLocation: %s"), *SpawnLocation.ToString());
+    SetActorLocation(SpawnLocation);
 }
 
 void AInteractableBase::Outline(USceneComponent* Component)

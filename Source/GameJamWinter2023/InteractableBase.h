@@ -24,12 +24,18 @@ public:
 	void StopInteract();
 	UFUNCTION(BlueprintCallable)
 	void SpawnInteractables();
+	UFUNCTION(BlueprintCallable)
+	void RespawnActor();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnPoints")
 	TArray<class ATargetPoint*> SpawnLocations;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "SpawnPoints")
 	UBlueprint* InteractableBlueprint;
+
+	FVector SpawnLocation;
+
+	class ATargetPoint* RandomLocation;
 
 protected:
 	// Called when the game starts or when spawned

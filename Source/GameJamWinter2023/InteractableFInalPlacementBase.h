@@ -17,4 +17,7 @@ class GAMEJAMWINTER2023_API AInteractableFInalPlacementBase : public AInteractab
 public:
 	void Interacted(class AInteractableBase* Interactable);
 	bool IsHoldingCorrectInteractable(class AInteractableBase* Interactable);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interactable")
+	TArray<class UDA_PlacementInfo*> InteractablePlacementInfoArray;
 };
