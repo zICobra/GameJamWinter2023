@@ -25,5 +25,8 @@ public:
 	class UDA_InteractableAllowed* ToolData;
 	UPROPERTY(EditAnywhere, Category = "Tools")
 	UBlueprint* TrashcanBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	class USoundCue* TrashcanSound;
 	
 };

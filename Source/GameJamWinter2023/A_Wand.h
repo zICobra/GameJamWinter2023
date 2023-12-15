@@ -26,5 +26,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Tools")
 	UBlueprint* WandBlueprint;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	class USoundCue* WandSound;
 
 };

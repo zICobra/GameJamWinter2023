@@ -36,8 +36,7 @@ void AInteractableBase::SpawnInteractables()
 
 void AInteractableBase::RespawnActor()
 {
-    UE_LOG(LogTemp, Warning, TEXT("SpawnLocation: %s"), *SpawnLocation.ToString());
-    SetActorLocation(SpawnLocation);
+    Destroy();
 }
 
 void AInteractableBase::Outline(USceneComponent* Component)

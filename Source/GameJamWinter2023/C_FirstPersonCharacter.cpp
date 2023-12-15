@@ -275,20 +275,9 @@ void AC_FirstPersonCharacter::Interact()
 
 
 	if(Grabbed == true)
-	{	
-		Params.AddIgnoredActor(GrabbedActor);
-		bool bSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, EndPoint, ECC_GameTraceChannel1, Params);
-		if(bSuccess && HitResult.GetActor())
-		{
-			if (bSuccess && HitResult.GetActor()->IsA<AInteractableBase>())
-     		{
-				UE_LOG(LogTemp, Warning, TEXT("Hit"));
-            	AInteractableBase* ActorHit = Cast<AInteractableBase>(HitResult.GetActor());
-
-				ActorHit->Outline(HitResult.GetActor()->FindComponentByClass<UStaticMeshComponent>());
-        	}
-		}
+	{
 		Grabbed = false;
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), WandPlace, GetActorLocation(), WandPlace->GetVolumeMultiplier(), WandPlace->GetPitchMultiplier());
 		AInteractableBase* InteractionBase = Cast<AInteractableBase>(HitActor);
 		UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 		PhysicsHandle->ReleaseComponent();

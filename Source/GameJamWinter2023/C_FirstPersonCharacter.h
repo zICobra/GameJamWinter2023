@@ -92,6 +92,8 @@ private:
 	class USoundCue* HolzbodenFootsteps;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	class USoundCue* DachbodenFootsteps;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	class USoundCue* WandPlace;
 
 	UFUNCTION(BlueprintCallable)
 	void Footsteps();

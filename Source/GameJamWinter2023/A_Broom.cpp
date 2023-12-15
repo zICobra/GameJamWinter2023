@@ -5,6 +5,8 @@
 
 #include "InteractableBase.h"
 #include "DA_InteractableAllowed.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 void AA_Broom::ActivateTool()
 {
@@ -21,6 +23,7 @@ void AA_Broom::DeactivateTool()
 
 void AA_Broom::InteractWithInteractable(class AInteractableBase* Interactable)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), WishSound, GetActorLocation(), WishSound->GetVolumeMultiplier(), WishSound->GetPitchMultiplier());
 	Interactable->Destroy();
 }
 

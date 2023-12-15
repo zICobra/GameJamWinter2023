@@ -5,6 +5,8 @@
 
 #include "InteractableBase.h"
 #include "DA_InteractableAllowed.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 
 void AA_Wand::ActivateTool()
@@ -24,6 +26,7 @@ void AA_Wand::DeactivateTool()
 void AA_Wand::InteractWithInteractable(class AInteractableBase* Interactable)
 {
 	Interactable->StartInteract();
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), WandSound, GetActorLocation(), WandSound->GetVolumeMultiplier(), WandSound->GetPitchMultiplier());
 }
 
 bool AA_Wand::IsCompatibleWithInteractable(class AInteractableBase* Interactable)

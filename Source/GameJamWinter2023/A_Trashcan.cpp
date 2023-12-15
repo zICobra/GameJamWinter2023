@@ -5,6 +5,8 @@
 
 #include "InteractableBase.h"
 #include "DA_InteractableAllowed.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 void AA_Trashcan::ActivateTool()
 {
@@ -21,6 +23,7 @@ void AA_Trashcan::DeactivateTool()
 
 void AA_Trashcan::InteractWithInteractable(class AInteractableBase* Interactable)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), TrashcanSound, GetActorLocation(), TrashcanSound->GetVolumeMultiplier(), TrashcanSound->GetPitchMultiplier());
     Interactable->Destroy();
 }
 

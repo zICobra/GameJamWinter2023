@@ -24,5 +24,8 @@ public:
 	class UDA_InteractableAllowed* ToolData;
 	UPROPERTY(EditAnywhere, Category = "Tools")
 	UBlueprint* BroomBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	class USoundCue* WishSound;
 	
 };
