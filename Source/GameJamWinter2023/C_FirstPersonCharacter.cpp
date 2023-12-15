@@ -273,7 +273,6 @@ void AC_FirstPersonCharacter::Interact()
 	Params.AddIgnoredActor(this);
 	Params.AddIgnoredActor(GetOwner());
 
-
 	if(Grabbed == true)
 	{
 		Grabbed = false;
@@ -308,10 +307,8 @@ void AC_FirstPersonCharacter::Interact()
 						HitResult.GetComponent()->SetSimulatePhysics(true);
 						PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, HitResult.ImpactPoint, HitResult.GetActor()->GetActorRotation());
 						HitActor->SetActorEnableCollision(false);
-						if(PreviouslyHitActor)
-						{
-							PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
-						}
+						PreviouslyHitActor->ClearOutline(PreviouslyHitActor->FindComponentByClass<UStaticMeshComponent>());
+						
 					}
 				}
 			}
